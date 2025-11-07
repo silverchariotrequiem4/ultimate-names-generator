@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Ultimate AI Name Generator — Animated</title>
+
+  <!-- Google font -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --glass: rgba(255,255,255,0.12);
+      --glass-2: rgba(255,255,255,0.08);
+      --accent: #ffffff;
+      --text: #ffffff;
+    }
+
+    * { box-sizing: border-box; transition: all 0.25s ease; }
+    html,body { height:100%; margin:0; font-family:'Poppins',system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial; }
+
+    body{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px;
+      background: linear-gradient(-45deg, #7b2ff7, #00c6ff, #ff6ec7, #00ffa3);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+      color:var(--text);
+    }
+
+    @keyframes gradientMove{
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+
+    .card{
+      width:100%;
+      max-width:760px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border-radius:16px;
+      padding:28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+      backdrop-filter: blur(8px);
+      position:relative;
+      overflow:hidden;
+    }
+
+    .title{
+      display:flex;
+      align-items:center;
+      gap:14px;
+      margin:0 0 10px 0;
+      transform-origin:center;
+      animation: floatTitle 3.5s ease-in-out infinite;
+    }
+
+    .title h1{ font-size:1.6rem; margin:0; font-weight:700; letter-spacing:0.2px; }
+    .subtitle{ margin:0 0 20px 0; opacity:0.95; font-weight:300; }
+
+    @keyframes floatTitle{
+      0%,100%{ transform:translateY(0) }
+      50%{ transform:translateY(-8px) }
+    }
+
+    .controls{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+
+    .controls-left{
+      display:flex;
+      gap:12px;
+      flex:1 1 60%;
+    }
+
+    input[type="text"]{
+      flex:1 1 320px;
+      min-width:180px;
+      padding:12px 14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.06);
+      background:var(--glass);
+      color:var(--text);
+      outline:none;
+      font-size:1rem;
+      text-align:left;
+    }
+
+    input::placeholder{ color:rgba(255,255,255,0.75); }
+
+    .btn{
+      padding:10px 16px;
+      border-radius:10px;
+      background:var(--accent);
+      color:#222;
+      font-weight:600;
+      border:none;
+      cursor:pointer;
+      box-shadow:0 6px 18px rgba(0,0,0,0.18);
+    }
+
+    .btn.secondary{
+      background:transparent;
+      color:var(--accent);
+      border:1px solid rgba(255,255,255,0.12);
+      box-shadow:none;
+    }
+
+    .btn:active{ transform:translateY(1px) }
+
+    .output{
+      margin-top:20px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      background:linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      border-radius:12px;
+      padding:14px;
+      min-height:64px;
+      opacity:0;
+      transform:translateY(12px);
+      transition:opacity 280ms ease, transform 280ms ease;
+    }
+
+    .output.show{ opacity:1; transform:translateY(0); }
+
+    .name-list{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+    .name-chip{
+      padding:8px 12px;
+      border-radius:999px;
+      background:var(--glass-2);
+      font-weight:500;
+      font-size:0.98rem;
+      border:1px solid rgba(255,255,255,0.04);
+    }
+
+    .controls-right{ display:flex; gap:8px; align-items:center; }
+
+    footer{ margin-top:18px; font-size:0.78rem; opacity:0.8; text-align:center; color:rgba(255,255,255,0.9); }
+
+    /* Responsive */
+    @media (max-width:520px){
+      .controls{ flex-direction:column; align-items:stretch; }
+      .controls-left{ flex:1 1 auto; width:100% }
+      .controls-right{ justify-content:space-between; width:100% }
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="main" aria-labelledby="title">
+    <div class="title">
+      <svg width="44" height="44" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <circle cx="12" cy="12" r="10" stroke="white" stroke-opacity="0.12" stroke-width="1.5"/>
+        <path d="M7 12c0-2 2-4 5-4s5 2 5 4-2 4-5 4-5-2-5-4z" stroke="white" stroke-opacity="0.9" stroke-width="1.2" fill="none"/>
+      </svg>
+      <div>
+        <h1 id="title">Ultimate AI Name Generator</h1>
+        <div class="subtitle">Type what you want — baby, cat, brand, fantasy, gamer, startup, hero, etc. Press Enter or click Generate.</div>
+      </div>
+    </div>
+
+    <div class="controls" aria-hidden="false">
+      <div class="controls-left">
+        <input id="query" type="text" placeholder="e.g. 'baby girl', 'cat', 'fantasy hero', 'YouTube channel'..." aria-label="What kind of name do you want?" />
+        <button id="generate" class="btn" type="button">Generate</button>
+      </div>
+
+      <div class="controls-right">
+        <button id="multi" class="btn secondary" type="button" title="Generate 5 names at once">Generate 5</button>
+        <button id="copy" class="btn secondary" type="button" title="Copy all shown names">Copy</button>
+        <button id="clear" class="btn secondary" type="button" title="Clear output and input">Clear</button>
+      </div>
+    </div>
+
+    <div id="output" class="output" aria-live="polite" aria-atomic="true">
+      <div class="name-list" id="nameList" aria-label="Generated names">No name generated yet</div>
+    </div>
+
+    <footer>Made by Sandeep S — alphabet-only creative names • No numbers included</footer>
+  </div>
+
+  <script>
+    // --------------------------
+    // Name sets (alphabet-only)
+    // --------------------------
+    const nameSets = {
+      fantasy: ["Aeloria","Thalnor","Elarin","Mythra","Zephiel","Calith","Orlien","Vaelora","Eryndor","Silvane"],
+      scifi: ["Xyra","Quentis","Velar","Nyxon","Taria","Krynn","Azura","Vion","Zerex","Orvion"],
+      mythical: ["Elyndra","Dravon","Seraphis","Myronia","Tirath","Lunara","Kareth","Vaedra","Sylora","Oberis"],
+      cool: ["Aven","Skail","Trixen","Zyra","Lyrik","Caiden","Rynex","Vash","Kylen","Ravik"],
+      anime: ["Rinako","Tatsumi","Akena","Kairon","Sakura","Itsuro","Hikari","Renji","Miyu","Taeko"],
+      mystery: ["Nocten","Velith","Ombra","Silven","Kravis","Riven","Thalen","Nythra","Vesper","Mordai"],
+      baby: ["Olivia","Ethan","Sofia","Luca","Ava","Leo","Emma","Noah","Maya","Arlo"],
+      brand: ["Veltria","Novanto","Klyro","Astreon","Lumix","Zentra","Bravora","Monexis","Novara","Brevon"],
+      gaming: ["Shadowz","Ravon","Blazic","Kytra","Vortexa","Zenith","Stryn","Falix","Razorix","Vectra"],
+      pet: ["Mochi","Shadow","Luna","Coco","Simba","Whiskers","Rocky","Bella","Miso","Pippin"],
+      superhero: ["Astrix","Solaris","Magnon","Viora","Tempra","Cyclen","Lunex","Voltana","Radiant","Skyborne"],
+      villain: ["Draxen","Malvorn","Zyther","Vandor","Craven","Lunthra","Obrax","Myzor","Vorash","Neroth"],
+      angel: ["Seraphia","Elyon","Celestia","Ariel","Zadriel","Lumina","Azrael","Cielora","Hariel","Solene"],
+      devil: ["Lucien","Damon","Morvix","Vorn","Azazel","Raviel","Klyth","Zeran","Malin","Vexor"],
+      couple: ["Lunara & Orion","Mia & Leo","Ava & Noah","Kira & Ren","Nyla & Zane","Sera & Aiden"],
+      car: ["Vortiq","Ravora","Zenra","Nitrus","Astor","Veltra","Xynox","Cruza","Torvan","Aerion"],
+      tech: ["Nexora","Bitrise","Cyberra","Algorix","Techion","Infron","Netvra","Optix","Datara","Syntrix"],
+      youtube: ["Vibora","Trendix","Clipora","Viewra","Streamio","Buzzon","Creovia","Trendora","Reelix","Castro"],
+      music: ["Lyra","Chordis","Vionix","Melina","Harmonix","Sonara","Beatra","Vozia","Cadence","Arion"],
+      story: ["Echovale","Veloria","Darkened Skies","Lost Ember","Whisper Vale","Beyond the Veil","Moonreach","Glimmerfen"],
+      royal: ["Aldoria","Regalis","Thalora","Crownis","Velian","Dynara","Elysor","Majira","Saren","Koval"],
+      funny: ["Bloopa","Snorfy","Wiggle","Zimbo","Muffo","Chonky","Gooba","Noodle","Bimble","Quokka"],
+      planet: ["Orvion","Xendra","Luneth","Kyros","Astra","Velion","Zerra","Tython","Elyxis","Solara"],
+      movie: ["Luminor","Crimson Path","Echo Fall","Solar Drift","Velora Rising","Dark Ascent","Silent Reef","Iron Hollow"]
+    };
+
+    // --------------------------
+    // Category keyword map
+    // --------------------------
+    const categoryMap = {
+      fantasy: ["fantasy","elf","magic","kingdom","dragon","sorcerer","wizard","fae","fairy","orc"],
+      scifi: ["sci","space","future","robot","alien","cyber","galaxy","warp","android"],
+      mythical: ["myth","legend","god","creature","legendary","mythical"],
+      cool: ["cool","unique","modern","stylish","trendy","hip","vibe","aesthetic"],
+      anime: ["anime","otaku","manga","kawaii","senpai"],
+      mystery: ["mystery","dark","detective","crime","thriller","noir"],
+      baby: ["baby","boy","girl","newborn","kid","infant","child","son","daughter"],
+      brand: ["brand","company","startup","shop","business","product","service"],
+      gaming: ["game","gamer","pubg","valorant","fortnite","free fire","esports","clan"],
+      pet: ["cat","dog","pet","animal","puppy","kitten","petname","pet names"],
+      superhero: ["superhero","hero","power","marvel","dc","super"],
+      villain: ["villain","evil","enemy","antagonist","nemesis"],
+      angel: ["angel","heaven","seraph","celestial","holy"],
+      devil: ["devil","demon","hell","infernal","demonic"],
+      couple: ["couple","love","pair","together","romantic","partner","ship"],
+      car: ["car","vehicle","bike","racing","automobile","sedan","sportscar"],
+      tech: ["tech","app","ai","software","website","digital","saas","tool","platform"],
+      youtube: ["youtube","channel","content","influencer","vlog","stream","creator"],
+      music: ["music","band","song","melody","beat","dj","composer"],
+      story: ["story","novel","book","fiction","tale","chapter","fanfiction"],
+      royal: ["royal","king","queen","prince","princess","crown","duke","duchess"],
+      funny: ["funny","comedy","meme","humor","joke","silly"],
+      planet: ["planet","galaxy","world","space","orb","star","system"],
+      movie: ["movie","film","cinema","screenplay","hollywood","bollywood"]
+    };
+
+    // --------------------------
+    // Helpers
+    // --------------------------
+    function detectCategory(text){
+      if (!text) return "cool";
+      const low = text.toLowerCase();
+      for (const [category, kwList] of Object.entries(categoryMap)){
+        for (const kw of kwList){
+          if (low.includes(kw)) return category;
+        }
+      }
+      // fallback: if user typed "brand" synonyms
+      return "cool";
+    }
+
+    function pickRandom(arr){
+      return arr[Math.floor(Math.random()*arr.length)];
+    }
+
+    // Generate single name
+    function generateSingle(text){
+      const cat = detectCategory(text);
+      const bucket = nameSets[cat] || nameSets.cool;
+      return pickRandom(bucket);
+    }
+
+    // Generate n unique-ish names (best-effort)
+    function generateMultiple(text, n=5){
+      const results = [];
+      const attemptsLimit = n * 8;
+      let attempts = 0;
+      while (results.length < n && attempts < attemptsLimit){
+        const name = generateSingle(text);
+        if (!results.includes(name)) results.push(name);
+        attempts++;
+      }
+      // if still less, fill with variations
+      while (results.length < n){
+        results.push(generateSingle(text) + "");
+      }
+      return results;
+    }
+
+    // --------------------------
+    // DOM & events
+    // --------------------------
+    const qInput = document.getElementById("query");
+    const btnGen = document.getElementById("generate");
+    const btnMulti = document.getElementById("multi");
+    const btnCopy = document.getElementById("copy");
+    const btnClear = document.getElementById("clear");
+    const out = document.getElementById("output");
+    const nameList = document.getElementById("nameList");
+
+    function showNames(names){
+      nameList.innerHTML = "";
+      names.forEach(nm => {
+        const chip = document.createElement("div");
+        chip.className = "name-chip";
+        chip.textContent = nm;
+        chip.title = "Click to copy";
+        chip.addEventListener("click", () => {
+          copyTextToClipboard(nm);
+          chip.style.boxShadow = "0 6px 16px rgba(0,0,0,0.35)";
+        });
+        nameList.appendChild(chip);
+      });
+      out.classList.add("show");
+    }
+
+    // copy helper
+    async function copyTextToClipboard(txt){
+      try{
+        await navigator.clipboard.writeText(txt);
+        // small visual feedback (toast could be added later)
+        return true;
+      } catch (e){
+        // fallback
+        const ta = document.createElement("textarea");
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        ta.remove();
+        return false;
+      }
+    }
+
+    // Event handlers
+    btnGen.addEventListener("click", () => {
+      const q = qInput.value.trim();
+      const name = generateSingle(q);
+      showNames([name]);
+    });
+
+    btnMulti.addEventListener("click", () => {
+      const q = qInput.value.trim();
+      const set = generateMultiple(q, 5);
+      showNames(set);
+    });
+
+    btnCopy.addEventListener("click", async () => {
+      const chips = Array.from(nameList.querySelectorAll(".name-chip")).map(c => c.textContent);
+      if (chips.length === 0) return;
+      const joined = chips.join(", ");
+      await copyTextToClipboard(joined);
+      btnCopy.textContent = "Copied!";
+      setTimeout(()=> btnCopy.textContent = "Copy", 1200);
+    });
+
+    btnClear.addEventListener("click", () => {
+      qInput.value = "";
+      nameList.innerHTML = "No name generated yet";
+      out.classList.remove("show");
+    });
+
+    // Enter key triggers generate
+    qInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter"){
+        e.preventDefault();
+        btnGen.click();
+      }
+    });
+
+    // initial example names
+    showNames(["Type something and press Generate"]);
+  </script>
+</body>
+</html>
+v
